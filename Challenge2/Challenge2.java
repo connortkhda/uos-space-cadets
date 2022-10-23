@@ -1,23 +1,26 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class Challenge2 {
-    public static final ArrayList<String> commands = new ArrayList<>(Arrays.asList("clear", "inc", "decr", "while", "not", "end", "do"));
     public static void main(String[] args) {  
         HashMap<String, Integer> variables = new HashMap<>();
         //run(readFile(args[0]));
-        run(readFile("D:/Space Cadets/Challenge2/test3.txt"), variables);
+        //works if launched from console
+        run(readFile("D:/Space Cadets/Challenge2/test2.txt"), variables);
+        //readFile(filePath) to read from text file
 
+        //prints final set of variables (for logging)
         for (String variable : variables.keySet()) {
             System.out.println(variable + ": " + variables.get(variable));
         }
         System.exit(0);
     }
 
+    //reads all text from file, cutting out any indentation and ;'s. extended version could have error checking that ensures the ;
+    //delimiter is present on every line, else errors
     public static ArrayList<String> readFile(String fileName) {
         ArrayList<String> program = new ArrayList<String>();
         try {
@@ -34,6 +37,7 @@ public class Challenge2 {
         return program;
     }
 
+    //executes commands and stores variable values in hashmap "variables"
     public static void run(ArrayList<String> codeBlock, HashMap<String, Integer> variables) {
         int index = 0;
         String[] lineArray;
@@ -43,6 +47,7 @@ public class Challenge2 {
                 break;
             }
 
+            //prints out variable values for each loop of run for a code block (for logging)
             for (String key : variables.keySet()) {
                 System.out.println(key + ": " + variables.get(key));
             }
@@ -64,7 +69,6 @@ public class Challenge2 {
                         clear(lineArray[1], variables);
                     }
                     index = whileLoop(lineArray[1], Integer.parseInt(lineArray[3]), index, codeBlock, variables);
-                // can maybe take all lines from there until end and use run recursively with that single block and return varibles as a thing
                     break;
                 default:
                     break;
@@ -106,6 +110,7 @@ public class Challenge2 {
                 System.exit(1);
             }
 
+            //ensures the correct while loop is looped through, for every "while", an "end" is ignored
             line = codeBlock.get(index).split(" ");
             if (line[0].equals("while")) {
                 nested++;
@@ -117,12 +122,17 @@ public class Challenge2 {
             index++;            
         }
 
+        //creates the code block that is to be called to loop through, only the statments inside of the "while" and "end"
         ArrayList<String> recurse = new ArrayList<String>();
         for(int i = startIndex + 1; i < index; i++) {
             recurse.add(codeBlock.get(i));
         }
 
+        //outputs a values loop to reach (for logging)
         System.out.println(variable + " must reach " + condition);
+
+        //runs run until the codeblock satisfies the condition, runs until stack overflow error if not reached
+        //could be handled in extension
         while (variables.get(variable).intValue() != condition) {
             run(recurse, variables);
         }
