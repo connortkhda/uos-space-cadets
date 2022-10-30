@@ -9,7 +9,7 @@ public class Challenge3 {
         HashMap<String, Integer> variables = new HashMap<>();
         //run(readFile(args[0]));
         //works if launched from console
-        run(readFile("D:/Space Cadets/Challenge2/test2.txt"), variables);
+        run(readFile("D:/Space Cadets/Challenge3/testAddition.txt"), variables);
         //readFile(filePath) to read from text file
 
         //prints final set of variables (for logging)
@@ -71,7 +71,32 @@ public class Challenge3 {
                     index = whileLoop(lineArray[1], Integer.parseInt(lineArray[3]), index, codeBlock, variables);
                     break;
                 default:
-                    break;
+                    //adds comment functionality, if the string starts with //, it is ignored
+                    if (lineArray[0].startsWith("//")) {
+                        break;
+                    }
+
+                    //adds addition, subtraction, divison, multiplication
+                    //operations must be written "x = y + z" not "x=y+z" else invalid, could handle this more gracefully but will do that in due course
+                    if (lineArray.length == 5) {
+                        switch (lineArray[3]) {
+                            case "+":
+                                add(lineArray, variables);
+                                break;
+                            case "-":
+                                subtract(lineArray, variables);
+                                break;
+                            case "*":
+                                multiply(lineArray, variables);
+                                break; 
+                            case "/":
+                                divide(lineArray, variables);
+                                break; 
+                            default:
+                                break;
+                        }
+                    }
+
             }
             index++;
         }
@@ -97,6 +122,38 @@ public class Challenge3 {
 
     public static void clear(String variable, HashMap<String, Integer> variables) {
         variables.put(variable, 0);
+    }
+
+    public static void add(String[] lineArray, HashMap<String, Integer> variables) {
+        if (!variables.containsKey(lineArray[0])) {
+            clear(lineArray[0], variables);
+        }
+        variables.put(lineArray[0], variables.get(lineArray[2])+variables.get(lineArray[4]));
+    }
+
+    public static void subtract(String[] lineArray, HashMap<String, Integer> variables) {
+        if (!variables.containsKey(lineArray[0])) {
+            clear(lineArray[0], variables);
+        }
+        if (variables.get(lineArray[2])-variables.get(lineArray[4]) < 0) {
+            System.err.println("variable " + lineArray[0] + " cannot be negative. exiting");
+            System.exit(1);
+        } 
+        variables.put(lineArray[0], variables.get(lineArray[2])-variables.get(lineArray[4]));
+    }
+
+    public static void multiply(String[] lineArray, HashMap<String, Integer> variables) {
+        if (!variables.containsKey(lineArray[0])) {
+            clear(lineArray[0], variables);
+        }
+        variables.put(lineArray[0], variables.get(lineArray[2])*variables.get(lineArray[4]));
+    }
+
+    public static void divide(String[] lineArray, HashMap<String, Integer> variables) {
+        if (!variables.containsKey(lineArray[0])) {
+            clear(lineArray[0], variables);
+        }
+        variables.put(lineArray[0], variables.get(lineArray[2])/variables.get(lineArray[4]));
     }
 
     //while var not x do;
