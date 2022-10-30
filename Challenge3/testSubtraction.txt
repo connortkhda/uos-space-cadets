@@ -1,0 +1,7 @@
+//tests subtraction
+incr y;
+incr y;
+incr z;
+incr z;
+incr z;
+x = z - y;

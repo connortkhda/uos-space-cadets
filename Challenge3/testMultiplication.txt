@@ -1,0 +1,6 @@
+//tests multiplication
+incr y;
+incr z;
+incr z;
+incr z;
+x = y * z;
