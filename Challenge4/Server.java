@@ -19,6 +19,7 @@ public class Server {
     public void startServer() {
         try {
             serverSocket = new ServerSocket(5000);
+            System.out.println("Server initialised on port: 5000");
             while (true) {
                 clientSocket = serverSocket.accept();
                 RunServer activeServer = new RunServer(clientSocket, activeServers);
@@ -39,6 +40,7 @@ public class Server {
         public RunServer(Socket clientSocket, ArrayList<RunServer> activeServers) {
             this.clientSocket = clientSocket;
             this.activeServers = activeServers;
+            System.out.println("Connection established with a client");
         }
 
         public void run() {
@@ -48,10 +50,11 @@ public class Server {
 
                 while (true) {
                     String message = clientInput.readLine();
+                    System.out.println("Server recieved: " + message);
+
                     if (message.equals("EXIT")) {
                         break;
                     } else {
-                        System.out.println("SERVER: " + message);
                         for (RunServer server : activeServers) {
                             server.serverOutput.println(message);
                         }
